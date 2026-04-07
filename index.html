@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shivaji Polytechnic Atpadi - EduSmart Bot </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* Global Styles */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body{
+    height: 100vh;
+    background: linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 3D Glassmorphism Container */
+.chatbot-container{
+    width: 380px;   
+    height: 600px;  
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 25px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    animation: pop 0.6s ease;
+}
+
+@keyframes pop{
+    from{transform: scale(0.9); opacity:0;}
+    to{transform: scale(1); opacity:1;}
+}
+
+/* Header with Mute Toggle */
+.chatbot-header{
+    background: linear-gradient(135deg,#0f3460,#162447);
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+#muteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+#muteBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#muteBtn svg {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+}
+
+/* ADDED: Quick Action Bar Style */
+.action-bar {
+    background: #f1f3f6;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid #ddd;
+    scrollbar-width: none; /* Firefox */
+}
+.action-bar::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+.action-chip {
+    background: #fff;
+    border: 1px solid #1a2a6c;
+    color: #1a2a6c;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.action-chip:hover { background: #1a2a6c; color: white; }
+
+/* Language Selector */
+.language-bar{
+    background: #f9f9f9;
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.language-bar select{
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Chat Body */
+.chatbot-body{
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #fdfcfb;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3D Message Wrapper */
+.message-wrapper {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 15px;
+}
+
+.bot-wrapper { justify-content: flex-start; }
+.user-wrapper { justify-content: flex-end; }
+
+.avatar-3d {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+}
+
+.message{
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: fade 0.3s ease;
+    word-wrap: break-word;
+}
+
+.bot-gif {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+@keyframes fade{
+    from{opacity:0; transform: translateY(5px);}
+    to{opacity:1; transform: translateY(0);}
+}
+
+.user{
+    background: linear-gradient(135deg,#0f3460,#162447);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.bot{
+    background: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-bottom-left-radius: 4px;
+}
+
+/* 3D Robot Thinking Indicator */
+.typing-indicator {
+    display: none;
+    align-items: center;
+    margin: 10px 20px;
+}
+
+.floating-robot {
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+    animation: float 2s infinite ease-in-out;
+    margin-right: 12px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#typing-text {
+    font-size: 13px;
+    color: #0f3460;
+    font-weight: 600;
+}
+
+.chatbot-footer {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: transparent; 
+    position: relative;
+    bottom: 10px;
+}
+
+.search-wrapper {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    background: #121212; 
+    border-radius: 30px;
+    padding: 5px 15px;
+    border: 2px solid transparent;
+    background-image: linear-gradient(#121212, #121212), 
+                      linear-gradient(to right, #fdbb2d, #b21f1f, #1a2a6c, #00d2ff);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.search-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.search-wrapper input::placeholder {
+    color: #999;
+}
+
+.mic-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mic-btn svg {
+    fill: #00d2ff;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s;
+}
+
+.mic-btn:hover svg {
+    transform: scale(1.2);
+}
+
+.mic-active svg {
+    fill: #ff4b2b !important;
+    filter: drop-shadow(0 0 5px red);
+}
+
+.chatbot-footer button {
+    background: transparent;
+    border: none;
+    color: #00d2ff;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 10px;
+    transition: transform 0.2s;
+}
+
+.chatbot-footer button:hover {
+    transform: scale(1.1);
+}
+
+.bot a {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 4px 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    color: #1a2a6c;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="chatbot-container">
+    <div class="chatbot-header">
+        <span>✏️ Shivaji Polytechnic Bot</span>
+        <button id="muteBtn" onclick="toggleMute()" title="Mute/Unmute Voice">
+            <span id="muteIcon">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </span>
+        </button>
+    </div>
+
+    <div class="action-bar">
+        <div class="action-chip" onclick="quickAction('Admission')">Admission</div>
+        <div class="action-chip" onclick="quickAction('Fees')">Fees</div>
+        <div class="action-chip" onclick="quickAction('Scholarship')">Scholarship</div>
+        <div class="action-chip" onclick="quickAction('Branches')">Branches</div>
+        <div class="action-chip" onclick="quickAction('Contact')">Contact</div>
+    </div>
+
+    <div class="language-bar">
+        Select Language: 
+        <select id="lang">
+            <option value="en">English</option>
+            <option value="mr">Marathi (मराठी)</option>
+            <option value="hi">Hindi (हिंदी)</option>
+        </select>
+    </div>
+
+    <div class="chatbot-body" id="chatBody"></div>
+    
+    <div class="typing-indicator" id="typing">
+        <img src="/r2.jpg" class="floating-robot" alt="AI Robot">
+        <span id="typing-text">AI is thinking...</span>
+    </div>
+
+    <div class="chatbot-footer">
+        <div class="search-wrapper">
+            <button class="mic-btn" id="micBtn" onclick="startVoiceRecognition()" title="Voice Typing">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+            <input type="text" id="userInput" placeholder="Ask anything..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const input = document.getElementById("userInput");
+const chatBody = document.getElementById("chatBody");
+const langSelect = document.getElementById("lang");
+const typingIndicator = document.getElementById("typing");
+const micBtn = document.getElementById("micBtn");
+const muteIcon = document.getElementById("muteIcon");
+
+const botAvatar = "r1.jpg"; 
+let isMuted = false; 
+let lastBranchContext = ""; 
+let lastResponseText = "";
+
+const iconUnmuted = `<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+const iconMuted = `<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>`;
+
+// --- 1. FUZZY MATCHING HELPERS ---
+function getSimilarity(s1, s2) {
+    let longer = s1.length < s2.length ? s2 : s1;
+    let shorter = s1.length < s2.length ? s1 : s2;
+    if (longer.length === 0) return 1.0;
+    const editDistance = (a, b) => {
+        const costs = [];
+        for (let i = 0; i <= a.length; i++) {
+            let lastValue = i;
+            for (let j = 0; j <= b.length; j++) {
+                if (i === 0) costs[j] = j;
+                else if (j > 0) {
+                    let newValue = costs[j - 1];
+                    if (a.charAt(i - 1) !== b.charAt(j - 1))
+                        newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                    costs[j - 1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+            if (i > 0) costs[b.length] = lastValue;
+        }
+        return costs[b.length];
+    };
+    return (longer.length - editDistance(longer, shorter)) / parseFloat(longer.length);
+}
+
+function checkMatch(userInput, keywords) {
+    const words = userInput.toLowerCase().split(/\s+/);
+    return keywords.some(key => {
+        if (userInput.toLowerCase().includes(key.toLowerCase())) return true;
+        return words.some(word => getSimilarity(word, key.toLowerCase()) > 0.8);
+    });
+}
+
+function quickAction(val) {
+    if (val === 'Branches') {
+        input.value = "What branches are available?";
+    } else {
+        input.value = val;
+    }
+    sendMessage();
+}
+
+// --- 2. CORE CHAT FUNCTIONS ---
+document.addEventListener("DOMContentLoaded", () => {
+    displayBotMessage("Welcome to Shivaji Polytechnic Atpadi! I can help you with admissions, branches, and contact info. What would you like to know?");
+});
+
+input.addEventListener("keypress", (e) => { if(e.key === "Enter") sendMessage(); });
+
+function toggleMute() {
+    isMuted = !isMuted;
+    muteIcon.innerHTML = isMuted ? iconMuted : iconUnmuted;
+    if (isMuted) window.speechSynthesis.cancel();
+    else if (lastResponseText) speakResponse(lastResponseText, langSelect.value);
+}
+
+function startVoiceRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return alert("Browser not supported.");
+    const recognition = new SpeechRecognition();
+    recognition.lang = langSelect.value === 'mr' ? 'mr-IN' : (langSelect.value === 'hi' ? 'hi-IN' : 'en-US');
+    recognition.onstart = () => { micBtn.classList.add("mic-active"); input.placeholder = "Listening..."; };
+    recognition.onresult = (event) => {
+        input.value = event.results[0][0].transcript;
+        setTimeout(() => sendMessage(), 500);
+    };
+    recognition.onend = () => { micBtn.classList.remove("mic-active"); input.placeholder = "Ask anything..."; };
+    recognition.start();
+}
+function isTtsAvailable() {
+    return 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+}
+let voices = [];
+
+function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+    if (voices.length) {
+        console.log("Voices loaded:", voices.map(v => v.name + " (" + v.lang + ")"));
+    }
+    else {
+        window.speechSynthesis.addEventListener('voiceschanged', () => {
+            voices = window.speechSynthesis.getVoices();
+            console.log("Voices loaded on change:", voices.map(v => v.name + " (" + v.lang + ")"));
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadVoices);
+function speakResponse(text, langCode) {
+    if (isMuted) {
+        typingIndicator.style.display = "none"; // hide if muted
+        return;
+    }
+
+    window.speechSynthesis.cancel(); // stop any ongoing speech
+
+    const cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
+    const langMap = { 'mr': 'mr-IN', 'hi': 'hi-IN', 'en': 'en-US' };
+    const utterLang = langMap[langCode] || 'en-US';
+
+    function actuallySpeak() {
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = utterLang;
+
+        // Choose the best voice
+        let selectedVoice = voices.find(v => v.lang === utterLang && v.name.includes('Google')) 
+                         || voices.find(v => v.lang === utterLang)
+                         || voices.find(v => v.lang.startsWith(langCode));
+        if (selectedVoice) utterance.voice = selectedVoice;
+
+        utterance.pitch = 1.1;
+        utterance.rate = 1.0;
+
+        // ✅ Hide typing indicator when speech ends
+        utterance.onend = () => {
+            typingIndicator.style.opacity = "0";
+            setTimeout(() => typingIndicator.style.display = "none", 300); // smooth fade
+            console.log("Speech finished");
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    if (voices.length > 0) {
+        actuallySpeak();
+    } else {
+        window.speechSynthesis.addEventListener('voiceschanged', actuallySpeak, { once: true });
+    }
+}
+
+
+async function sendMessage() {
+    const languageCode = langSelect.value.toLowerCase();
+    const safeLang = ['en','mr','hi'].includes(languageCode) ? languageCode : 'en';
+    const userText = input.value.trim();
+    if (!userText) return;
+
+    // Display user message
+    displayUserMessage(userText);
+    input.value = "";
+
+    // Show typing indicator immediately
+    typingIndicator.style.display = "flex";
+    typingIndicator.style.opacity = "1";
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    setTimeout(async () => {
+        // Generate bot response text (YOUR LOGIC SAME ✅)
+        let responseData = generateBotResponse(userText.toLowerCase(), safeLang);
+
+        // Display bot message
+        displayBotMessage(responseData.text);
+
+        // Speak response
+        speakResponse(responseData.text, safeLang);
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // ✅ NEW: SAVE TO BACKEND (MongoDB)
+        try {
+            await fetch("http://localhost:3000/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: userText,
+                    reply: responseData.text
+                })
+            });
+        } catch (err) {
+            console.error("Save Error:", err);
+        }
+
+        typingIndicator.style.display = "none";
+
+    }, 500);
+}
+
+function displayBotMessage(text) {
+    lastResponseText = text;
+    const html = `<div class="message-wrapper bot-wrapper"><img src="/${botAvatar}" class="avatar-3d"><div class="message bot">${text}</div></div>`;
+    chatBody.innerHTML += html;
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function displayUserMessage(text) {
+    const html = `<div class="message-wrapper user-wrapper"><div class="message user">${text}</div></div>`;
+    chatBody.innerHTML += html;
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+/* =========================
+   🔹 ADDITION 1: KEYWORDS
+========================= */
+const extraKeys = {
+  academicCoordinator: [
+    "academic coordinator",
+    "coordinator",
+    "acad coordinator",
+    "admission coordinator",
+    "शैक्षणिक समन्वयक",
+    "अकॅडेमिक कोऑर्डिनेटर",
+    "academic head"
+  ]
+};
+
+// --- 3. GENERATE RESPONSE WITH FUZZY LOGIC ---
+function generateBotResponse(msg, lang) {
+    console.log("LANG RECEIVED:", lang); // 👈 ADD HERE
+    console.log("MESSAGE RECEIVED:", msg);
+const greetingKeywords = ["hi","hello","hey","नमस्ते","नमस्कार"];
+
+       const syllabusLink = "https://econtent.msbte.edu.in/curriculum_search/";
+    
+    const keys = {
+        name: ["name", "college", "institute", "नांव", "college name"],
+        president: ["president", "tanajirao", "patil", "अध्यक्ष", "chairman"],
+        principal: ["principal", "प्राचार्य", "kulkarni", "onkar", "head"],
+        hod: ["hod", "head of department", "विभाग प्रमुख", "vibhag pramukh"],
+        contact: ["address", "contact", "email", "पत्ता", "location", "phone"],
+        thanks: ["thank", "thanks", "धन्यवाद", "आभारी"],
+        updates: ["event", "update", "news", "कार्यक्रम", "notice"],
+        computer: ["computer", "कॉम्प्युटर", "it", "software"],
+        mechanical: ["mechanical", "मेकॅनिकल", "mech", "machine"],
+        civil: ["civil", "सिव्हिल", "construction"],
+        electrical: ["electrical", "इलेक्ट्रिकल", "electricity"],
+        etc: ["etc", "e&tc", "electronics", "telecom"],
+        syllabus: ["syllabus", "curriculum", "अभ्यासक्रम", "subjects"],
+        branch: ["branch", "course", "शाखा", "departments"],
+        fees: ["fee", "fees", "फी", "payment", "cost"],
+       // hello: ["hi", "hello", "नमस्कार", "नमस्ते", "hey"],
+        intake: ["intake", "seats", "capacity", "how many students", "जागा", "प्रवेश क्षमता"],
+        admission: ["admission", "how to join", "entry", "प्रवेश", "admission process"],
+        admissionDocs: ["admission document", "admission list", "entry papers", "प्रवेश कागदपत्रे"],
+        scholarship: ["scholarship", "scholar", "money back", "शिष्यवृत्ती", "scolership"],
+        punjabrao: ["punjabrao", "deshmukh", "hostel allowance", "पंजाबराव"],
+        shahu: ["shahu", "chatrapati", "ebc", "शाहू महाराज"],
+
+vicePrincipal: ["vice principal", "vp", "उपप्राचार्य", "vice head"],
+academicCoordinator: ["academic coordinator", "coordinator", "शैक्षणिक समन्वयक"]
+
+
+    };
+
+    const branchGifs = {
+        computer: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJpZ3R4bmVvbmZidm9yeXp0eWJidmR5eXp6Z3Z5eXp6Z3Z5eXAmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKSjPqcKGRZaO4w/giphy.gif",
+        mechanical: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmZidm9yeXp0eWJidmR5eXp6Z3Z5eXp6Z3Z5eXAmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/3o7TKVUn7iM8FMEU24/giphy.gif",
+        civil: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZidmR5eXp6Z3Z5eXp6Z3Z5eXAmZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PWc/l41lM8A5pBAA7UfS0/giphy.gif"
+    };
+
+    // --- NEW: HOD DATA FOR ALL BRANCHES ---
+    const hodData = {
+        en: {
+            computer: "The HOD of <b>Computer Dept</b> is <b> Mr.Landage M.N</b> (B.E. Comp). 💻",
+            mechanical: "The HOD of <b>Mechanical Dept</b> is <b>Mr.Gonjari P.S</b> (B.E. Mech). ⚙️",
+            civil: "The HOD of <b>Civil Dept</b> is <b> Mr.Raychure V.R</b> (B.E. Civil). 🏗️",
+            electrical: "The HOD of <b>Electrical Dept</b> is <b> Miss.Sankpal A.V</b> (B.E. Elect). ⚡",
+            etc: "The HOD of <b>E&TC Dept</b> is <b>Mr.Kulkarni P.V</b> (B.E. E&TC). 📡",
+            general: `<b>👨‍💼 HOD Directory:</b><br><br>
+                <table style="width:100%; border-collapse: collapse; font-size: 12px;">
+                    <tr style="background:#f2f2f2;"><th style="border:1px solid #ddd;padding:5px;">Dept</th><th style="border:1px solid #ddd;padding:5px;">Name</th><th style="border:1px solid #ddd;padding:5px;">Qual.</th></tr>
+                    <tr><td style="border:1px solid #ddd;padding:5px;">Comp</td><td style="border:1px solid #ddd;padding:5px;"> Mr.Landage M.N</td><td style="border:1px solid #ddd;padding:5px;">B.E.</td></tr>
+                    <tr><td style="border:1px solid #ddd;padding:5px;">Mech</td><td style="border:1px solid #ddd;padding:5px;">Mr.Gonjari P.S</td><td style="border:1px solid #ddd;padding:5px;">B.E.</td></tr>
+                    <tr><td style="border:1px solid #ddd;padding:5px;">Civil</td><td style="border:1px solid #ddd;padding:5px;">Mr.Raychure V.R</td><td style="border:1px solid #ddd;padding:5px;">B.E.</td></tr>
+                    <tr><td style="border:1px solid #ddd;padding:5px;">Elect</td><td style="border:1px solid #ddd;padding:5px;"> Miss.Sankpal A.V</td><td style="border:1px solid #ddd;padding:5px;">B.E.</td></tr>
+                    <tr><td style="border:1px solid #ddd;padding:5px;">E&TC</td><td style="border:1px solid #ddd;padding:5px;">Mr.Kulkarni P.V</td><td style="border:1px solid #ddd;padding:5px;">B.E.</td></tr>
+                </table>`
+        },
+        mr: {
+            computer: "<b>कॉम्प्युटर विभाग</b> प्रमुख <b>श्री. लांडगे एम. एन.</b> आहेत (B.E. Comp). आहेत. 💻",
+            mechanical: "<b>मेकॅनिकल विभाग</b> प्रमुख <b>श्री. गोंजारी पी. एस.</b> आहेत (B.E. Mech).  आहेत. ⚙️",
+            general: "<b>विभाग प्रमुख सूची:</b> कॉम्प्युटर (M.N. Landge), मेकॅनिकल (P.S. Gonjari), सिव्हिल (V.R. Raychure), इलेक्ट्रिकल (A.V. Sankpal)."
+        },
+        hi: {
+    computer: "<b>कंप्यूटर विभाग</b> के प्रमुख <b>श्री. लांडगे एम. एन.</b> (B.E. Comp) हैं। 💻",
+    mechanical: "<b>मैकेनिकल विभाग</b> के प्रमुख <b>श्री. गोंजारी पी. एस.</b> (B.E. Mech) हैं। ⚙️",
+    civil: "<b>सिविल विभाग</b> के प्रमुख <b>श्री. रायचुरे व्ही. आर.</b> (B.E. Civil) हैं। 🏗️",
+    electrical: "<b>इलेक्ट्रिकल विभाग</b> के प्रमुख <b>सौ. संकल्पल ए. व्ही.</b> (B.E. Elect) हैं। ⚡",
+    etc: "<b>ई-एंड-टीसी विभाग</b> के प्रमुख <b>श्री. कुलकर्णी पी. व्ही.</b> (B.E. E&TC) हैं। 📡",
+    general: "<b>विभाग प्रमुख सूची:</b> कंप्यूटर (Mr.Landage M.N), मैकेनिकल (Mr.Gonjari P.S), सिविल ( Mr.Raychure V.R), इलेक्ट्रिकल (Miss.Sankpal A.V)."
+    }
+    };
+    const branchDetails = {
+        en: {
+            computer: `<img src="${branchGifs.computer}" class="bot-gif"><b>Computer Dept Syllabus:</b><br>Focuses on Software, Networking, and AI. <br><a href='${syllabusLink}' target='_blank'>📥 Download Computer Syllabus</a> 💻`,
+            mechanical: `<img src="${branchGifs.mechanical}" class="bot-gif"><b>Mechanical Dept Syllabus:</b><br>Machines, Production & Design. <br><a href='${syllabusLink}' target='_blank'>📥 Download Mechanical Syllabus</a> ⚙️`,
+            civil: `<img src="${branchGifs.civil}" class="bot-gif"><b>Civil Dept Syllabus:</b><br>Infrastructure & Construction. <br><a href='${syllabusLink}' target='_blank'>📥 Download Civil Syllabus</a> 🏗️`,
+            electrical: `<b>Electrical Dept Syllabus:</b><br>Power Systems & Machines. <br><a href='${syllabusLink}' target='_blank'>📥 Download Electrical Syllabus</a> ⚡`,
+            etc: `<b>E&TC Dept Syllabus:</b><br>Telecom & Digital Electronics. <br><a href='${syllabusLink}' target='_blank'>📥 Download E&TC Syllabus</a> 📡`
+        },
+        mr: {
+            computer: `<img src="${branchGifs.computer}" class="bot-gif"><b>कॉम्प्युटर विभाग अभ्यासक्रम:</b><br>सॉफ्टवेअर आणि नेटवर्किंग. <br><a href='${syllabusLink}' target='_blank'>📥 अभ्यासक्रम डाउनलोड करा</a> 💻`,
+            mechanical: `<img src="${branchGifs.mechanical}" class="bot-gif"><b>मेकॅनिकल विभाग अभ्यासक्रम:</b><br>मशिनरी आणि उत्पादन. <br><a href='${syllabusLink}' target='_blank'>📥 अभ्यासक्रम डाउनलोड करा</a> ⚙️`,
+            civil: `<img src="${branchGifs.civil}" class="bot-gif"><b>सिव्हिल विभाग अभ्यासक्रम:</b><br>बांधकाम आणि स्ट्रक्चर. <br><a href='${syllabusLink}' target='_blank'>📥 अभ्यासक्रम डाउनलोड करा</a> 🏗️`,
+            electrical: `<b>इलेक्ट्रिकल विभाग अभ्यासक्रम:</b><br>पॉवर सिस्टम्स. <br><a href='${syllabusLink}' target='_blank'>📥 अभ्यासक्रम डाउनलोड करा</a> ⚡`,
+            etc: `<b>ई-अँड-टीसी विभाग अभ्यासक्रम:</b><br>टेलिकॉम आणि इलेक्ट्रॉनिक्स. <br><a href='${syllabusLink}' target='_blank'>📥 अभ्यासक्रम डाउनलोड करा</a> 📡`
+        },
+       hi: {
+    computer: `<img src="${branchGifs.computer}" class="bot-gif"><b>कंप्यूटर विभाग पाठ्यक्रम:</b><br>सॉफ्टवेयर, नेटवर्किंग और एआई। <br><a href='${syllabusLink}' target='_blank'>📥 पाठ्यक्रम डाउनलोड करें</a> 💻`,
+    mechanical: `<img src="${branchGifs.mechanical}" class="bot-gif"><b>मैकेनिकल विभाग पाठ्यक्रम:</b><br>मशीनें, उत्पादन और डिजाइन। <br><a href='${syllabusLink}' target='_blank'>📥 पाठ्यक्रम डाउनलोड करें</a> ⚙️`,
+    civil: `<img src="${branchGifs.civil}" class="bot-gif"><b>सिविल विभाग पाठ्यक्रम:</b><br>इन्फ्रास्ट्रक्चर और निर्माण। <br><a href='${syllabusLink}' target='_blank'>📥 पाठ्यक्रम डाउनलोड करें</a> 🏗️`,
+    electrical: `<b>इलेक्ट्रिकल विभाग पाठ्यक्रम:</b><br>पावर सिस्टम और मशीनें। <br><a href='${syllabusLink}' target='_blank'>📥 पाठ्यक्रम डाउनलोड करें</a> ⚡`,
+    etc: `<b>ई-एंड-टीसी विभाग पाठ्यक्रम:</b><br>टेलीकॉम और डिजिटल इलेक्ट्रॉनिक्स। <br><a href='${syllabusLink}' target='_blank'>📥 पाठ्यक्रम डाउनलोड करें</a> 📡`
+    }
+    };
+
+    const mainResponses = {
+    en: {
+        collegeName: "The name of this institute is <b>Shivaji Polytechnic Atpadi</b>, located in Atpadi. Taluka Atpadi. It is a premier technical college in Sangli district. 🏫",
+        president: "The President of the college is <b>Hon. Tanajirao Patil</b>. 🎖️",
+        principal: "The name of the Principal is <b>Mr. Onkar Ganesh Kulkarni</b>. 👨‍🏫",
+        fees: `<b>💰 Detailed Fee Structure (Academic Year 2024-25):</b><br><br>
+            <table style="width:100%; border-collapse: collapse; font-size: 13px; margin-bottom: 10px;">
+              <tr style="background-color: #f2f2f2;">
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Class</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: right;">Total Fee</th>
+              </tr>
+              <tr><td style="border: 1px solid #ddd; padding: 8px;"><b>First Year</b></td><td style="border: 1px solid #ddd; padding: 8px; text-align: right;">   
+ ₹67,545</td></tr>
+              <tr><td style="border: 1px solid #ddd; padding: 8px;"><b>Direct Second Year</b></td><td style="border: 1px solid #ddd; padding: 8px; text-align:
+              right;">₹48,240</td></tr>
+              <tr><td style="border: 1px solid #ddd; padding: 8px;"><b>Second Year</b></td><td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+ ₹47,230</td></tr>
+              <tr><td style="border: 1px solid #ddd; padding: 8px;"><b>Third Year</b></td><td style="border: 1px solid #ddd; padding: 8px; text-align: right;">
+ ₹47,230</td></tr>
+             </table>
+            <small><i>Note: Fees include Tuition, Development, Exam, and other applicable charges.</i></small>`,
+        contact: `<b>📍 Address:</b> Shivaji Polytechnic Atpadi, Near Suresh Indane Gas Agency Atpadi, Dist - Sangli 415301.<br>
+      <b>📧 Email:</b> shivajipoli@rediffmail.com<br>
+      <b>📞 Phone:</b> 02343-221177<br><br>
+      <b>🌐 Find Us On:</b><br>
+      <div style="display: flex; gap: 8px; margin-top: 8px; align-items: center; justify-content: flex-start;">
+          <a href="https://www.facebook.com/your_college_id" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 32px; height:
+          32px; background: #f0f0f0; border-radius: 6px; border: 1px solid #ddd; text-decoration: none;"> 
+           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" width="20" height="20" alt="Facebook">
+</a>
+          <a href="https://twitter.com/your_college_id" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; 
+ background: #f0f0f0; border-radius: 6px; border: 1px solid #ddd; text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" width="20" height="20" alt="Twitter">
+          </a>
+          <a href="https://www.instagram.com/your_college_id" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 
+ 32px; background: #f0f0f0; border-radius: 6px; border: 1px solid #ddd; text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" width="20" height="20" alt="Instagram">
+          </a>
+          <a href="https://plus.google.com/your_college_id" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 
+ 32px; background: #f0f0f0; border-radius: 6px; border: 1px solid #ddd; text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" width="20" height="20" alt="Google">
+          </a>
+          <a href="https://www.linkedin.com/school/your_college_id" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 32px; 
+ height: 32px; background: #f0f0f0; border-radius: 6px; border: 1px solid #ddd; text-decoration: none;">
+          <img src="https://cdn-icons-png.flaticon.com/512/3536/3536505.png" width="20" height="20" alt="LinkedIn">
+          </a>
+      </div>`,
+
+        course: "We offer Diploma in: Computer, Mechanical, Civil, Electrical, and E&TC. ⚙️",
+        syllabus: `You can find the MSBTE curriculum for all branches here: <br><a href='${syllabusLink}' target='_blank'>🌐 MSBTE Curriculum Portal</a>`,
+        hello: "Hello! How can I help you today? 😊",
+        thankyou: "You're very welcome! I am happy to help. 🎓🌟",
+        updates: "<b>📅 Latest Events & Updates:</b> New Admissions 2025-26 starting soon!",
+        intake: "<b>Total Student Intake:</b> 300 students per year (60 per branch). 🎓",
+        admission: `<b>Admission 2025-26:</b> Registration is online via <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE Maharashtra Portal</a>. 📝  
+<br><br>   
+        <b>Admission Guidance:</b> <b>Mr. Pawar R.B</b> (B.E. Design) – Academic Coordinator & Vice Principal. 👨‍🏫`,
+        admissionDocs: "<b>Required Docs:</b> SSC Marksheet, LC, Caste Cert, Aadhaar, Income Cert.",
+        scholarship: "We support various scholarships like <b>Rajarshi Shahu Maharaj (EBC)</b>, <b>Dr. Panjabrao Deshmukh Vastigruh Nirvah Bhatta</b>, and SC/ST/OBC Scholarship schemes. Which one do you want to know about?",
+        punjabrao: "<b>Dr. Panjabrao Deshmukh Scholarship Docs:</b><br>• Registered Rent Agreement/Hostel Certificate<br>• Father's Income Certificate (Under 8 Lakh)<br>• 10th/11th/12th Marksheet<br>• Gap Certificate (if any)<br>• Student's Bank Passbook & Aadhaar.",
+        shahu: "<b>Rajarshi Shahu Maharaj (EBC) Docs:</b><br>• Annual Income Certificate (Under 8 Lakh)<br>• CAP Allotment Letter<br>• Ration Card<br>• 10th Marksheet & Leaving Certificate<br>• Domicile Certificate."
+    },
+    mr: {
+        collegeName: "या संस्थेचे नाव <b>शिवाजी पॉलिटेक्निक आटपाडी</b> आहे. 🏫",
+        president: "संस्थेचे अध्यक्ष <b>मा. तानाजीराव पाटील</b> हे आहेत. 🎖️",
+        principal: "प्राचार्य <b>श्री. ओंकार गणेश कुलकर्णी</b> हे आहेत. 👨‍🏫",
+        contact: `<b>📍 पत्ता:</b> शिवाजी पॉलिटेक्निक आटपाडी, सुरेश इंडेन गॅस एजन्सी जवळ, आटपाडी, सांगली ४१५३०१.<br>
+              <b>📧 ईमेल:</b> shivajipoli@rediffmail.com<br>
+              <b>📞 फोन:</b> 02343-221177<br><br>
+              <b>🌐 आमचे सोशल मीडिया:</b><br>
+              <div style="display: flex; gap: 15px; margin-top: 10px; align-items: center;">
+                  <a href="https://www.facebook.com/your_college_page" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" width="26">
+                  </a>
+                  <a href="https://twitter.com/your_college_handle" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" width="26"></a>
+                  <a href="https://www.instagram.com/your_college_id" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" width="26">
+                    
+                  <a href="mailto:shivajipoli@rediffmail.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2504/2504914.png" width="26"></a>
+                  <a href="https://www.linkedin.com/school/your_college" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3536/3536505.png" width="26"></a>
+              </div>`,
+        course: "आमच्या शाखा: कॉम्प्युटर, मेकॅनिकल, सिव्हिल, इलेक्ट्रिकल, ई-अँड-टीसी. ⚙️",
+        syllabus: `येथे सर्व शाखांचा अभ्यासक्रम मिळेल: <br><a href='${syllabusLink}' target='_blank'>🌐 अभ्यासक्रम पोर्टल</a>`,
+        hello: "नमस्कार! मी तुमची काय मदत करू शकते? 😊",
+        thankyou: "तुमचे स्वागत आहे! मला आनंद झाला. 🚩🎓",
+        updates: "<b>📅 नवीन अपडेट्स:</b> २०२५-२६ प्रवेश लवकरच सुरू. 🏆",
+        intake: "<b>प्रवेश क्षमता:</b> ३०० जागा. 🎓",
+        admission: `<b>प्रवेश २०२५-२६:</b> ऑनलाईन नोंदणी <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE महाराष्ट्र पोर्टल</a> वर करा. 📝<br><br>
+<b>प्रवेश मार्गदर्शन:</b> <b>श्री. पवार आर. बी.</b> (B.E. Design) – शैक्षणिक समन्वयक व उपप्राचार्य. 👨‍🏫`,
+        admissionDocs: "<b>कागदपत्रे:</b> १०वी मार्कशीट, एल.सी, जातीचा दाखला, आधार कार्ड.",
+        scholarship: "आम्ही <b>राजर्षी शाहू महाराज (EBC)</b>, <b>डॉ. पंजाबराव देशमुख वस्तीगृह भत्ता</b> आणि SC/ST/OBC शिष्यवृत्ती योजना राबवतो. तुम्हाला कशाबद्दल माहिती हवी आहे?",
+        punjabrao: "<b>पंजाबराव देशमुख शिष्यवृत्ती कागदपत्रे:</b><br>• नोंदणीकृत भाडे करार/वसतिगृह प्रमाणपत्र<br>• वडिलांचा उत्पन्नाचा दाखला (८ लाखांच्या आत)<br>• १०वी/११वी/१२वी मार्कशीट<br>• गॅप सर्टिफिकेट (असल्यास)<br>• बँक पासबुक व आधार कार्ड.",
+        shahu: "<b>राजर्षी शाहू महाराज (EBC) कागदपत्रे:</b><br>• वार्षिक उत्पन्नाचा दाखला (८ लाखांच्या आत)<br>• CAP अलॉटमेंट लेटर<br>• रेशन कार्ड<br>• १०वी मार्कशीट व एल.सी.<br>• रहिवासी दाखला (Domicile)."
+    },
+  hi: {
+    collegeName: "इस संस्थान का नाम <b>शिवाजी पॉलिटेक्निक आटपाडी</b> है, जो सांगली जिले में स्थित है। 🏫",
+    president: "कॉलेज के अध्यक्ष <b>माननीय तानाजीराव पाटिल</b> हैं। 🎖️",
+    principal: "प्राचार्य का नाम <b>श्री ओंकार गणेश कुलकर्णी</b> है। 👨‍🏫",
+    fees: `<b>💰 विस्तृत शुल्क विवरण (2024-25):</b><br>प्रथम वर्ष: ₹67,545<br>द्वितीय वर्ष: ₹47,230`,
+    contact: `<b>📍 पता:</b> शिवाजी पॉलिटेक्निक आटपाडी, सांगली 415301.<br><b>📞 फोन:</b> 02343-221177`,
+    course: "हम कंप्यूटर, मैकेनिकल, सिविल, इलेक्ट्रिकल और ई-एंड-टीसी में डिप्लोमा प्रदान करते हैं। ⚙️",
+    syllabus: `आप सभी शाखाओं का सिलेबस यहाँ पा सकते हैं: <br><a href='${syllabusLink}' target='_blank'>🌐 एमएसबीटीई पोर्टल</a>`,
+    hello: "नमस्ते! आज मैं आपकी क्या सहायता कर सकती हूँ? 😊",
+    thankyou: "आपका स्वागत है! मुझे मदद करके खुशी हुई। 🎓",
+    updates: "<b>📅 नवीनतम अपडेट:</b> नए प्रवेश 2025-26 जल्द ही शुरू हो रहे हैं!",
+    intake: "<b>कुल प्रवेश क्षमता:</b> प्रति वर्ष 300 छात्र। 🎓",
+    admission: `<b>प्रवेश 2025-26:</b> पंजीकरण ऑनलाइन <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE महाराष्ट्र पोर्टल</a> पर करें। 📝<br><br>
+    <b>प्रवेश मार्गदर्शन:</b> <b>श्री पवार आर. बी.</b> (B.E. Design) – अकादमिक समन्वयक एवं उप-प्राचार्य। 👨‍🏫`,
+    scholarship: "हम <b>राजर्षी शाहू महाराज (EBC)</b>, <b>डॉ. पंजाबराव देशमुख छात्रावास भत्ता</b> और SC/ST/OBC छात्रवृत्ति योजनाओं का समर्थन करते हैं।"
+}
+};
+/* =========================
+ 🔹 ADDITION 2: RESPONSES
+    ========================= */
+    const academicCoordinatorData = {
+      en: "The <b>Academic Coordinator</b> is <b>Mr. Pawar R.B</b> (B.E. Design). 📘",
+      mr: "<b>शैक्षणिक समन्वयक</b> <b>श्री. पवार आर. बी.</b> आहेत (B.E. Design). 📘",
+      hi: "<b>शैक्षणिक समन्वयक</b> <b>श्री पवार आर. बी.</b> हैं (B.E. Design)। 📘"
+    };
+    const vicePrincipalData = {
+      en: "The <b>Vice Principal</b> is <b>Mr. Pawar R.B</b> (B.E. Design). 👨‍🏫",
+      mr: "<b>उपप्राचार्य</b> <b>श्री. पवार आर. बी.</b> आहेत (B.E. Design). 👨‍🏫",
+      hi: "<b>उप-प्राचार्य</b> <b>श्री पवार आर. बी.</b> हैं (B.E. Design)। 👨‍🏫"
+    };
+// 1. Initial Setup & Safety
+const cleanMsg = msg.trim().toLowerCase();
+const safeLang = lang || 'en'; // Ensure lang is never undefined
+
+// 2. Define Context Maps (Fallback to English if current lang is missing)
+// We define these first so the Greeting Logic below can use them
+let currentMain = mainResponses[safeLang] || mainResponses['en'];
+let currentBranch = branchDetails[safeLang] || branchDetails['en'];
+let currentHod = hodData[safeLang] || hodData['en'];
+
+// Utility to normalize greetings
+function normalizeGreeting(msg) {
+    // Lowercase everything
+    let text = msg.toLowerCase();
+
+    // Collapse repeated letters: hiiiii -> hi, heyyyy -> hey
+    text = text.replace(/(.)\1+/g, '$1');
+
+    // Handle common misspellings
+    const corrections = {
+        helo: "hello",
+        hii: "hi",
+        hiii: "hi",
+        thnk: "Thank you",
+        thanks: "Thank you"
+    };
+    if (corrections[text]) {
+        text = corrections[text];
+    }
+
+    return text;
+}
+
+// 3. Greeting Logic
+const greetingMap = {
+    en: ["hi", "hello", "hey"],
+    hi: ["hi", "hello", "नमस्ते", "नमस्कार"],
+    mr: ["hi", "hello", "नमस्कार", "नमस्ते"]
+};
+
+// Normalize the incoming message before checking
+const normalizedMsg = normalizeGreeting(cleanMsg);
+
+if (greetingMap[safeLang]?.includes(normalizedMsg)) {
+    return {
+        text: currentMain.hello,
+        isFallback: false
+    };
+}
+
+// 4. Update Branch Context
+let updatedContext = lastBranchContext;
+if (checkMatch(cleanMsg, keys.computer)) updatedContext = "computer";
+else if (checkMatch(cleanMsg, keys.mechanical)) updatedContext = "mechanical";
+else if (checkMatch(cleanMsg, keys.civil)) updatedContext = "civil";
+else if (checkMatch(cleanMsg, keys.electrical)) updatedContext = "electrical";
+else if (checkMatch(cleanMsg, keys.etc)) updatedContext = "etc";
+
+// 5. Response Decision Tree
+let response = null; // Declare response ONLY ONCE here
+
+if (checkMatch(cleanMsg, keys.academicCoordinator)) {
+    response = academicCoordinatorData[safeLang] || academicCoordinatorData.en;
+} 
+else if (checkMatch(cleanMsg, keys.vicePrincipal)) {
+    response = vicePrincipalData[safeLang] || vicePrincipalData.en;
+}
+else if (checkMatch(cleanMsg, keys.hod)) {
+    if (checkMatch(cleanMsg, keys.computer)) response = currentHod.computer;
+    else if (checkMatch(cleanMsg, keys.mechanical)) response = currentHod.mechanical;
+    else if (checkMatch(cleanMsg, keys.civil)) response = currentHod.civil;
+    else if (checkMatch(cleanMsg, keys.electrical)) response = currentHod.electrical;
+    else if (checkMatch(cleanMsg, keys.etc)) response = currentHod.etc;
+    else response = currentHod.general;
+} 
+else if (checkMatch(cleanMsg, keys.principal)) response = currentMain.principal;
+else if (checkMatch(cleanMsg, keys.president)) response = currentMain.president;
+else if (checkMatch(cleanMsg, keys.name)) response = currentMain.collegeName;
+else if (checkMatch(cleanMsg, keys.syllabus) && updatedContext) response = currentBranch[updatedContext];
+else if (checkMatch(cleanMsg, keys.intake)) response = currentMain.intake;
+else if (checkMatch(cleanMsg, keys.punjabrao)) response = currentMain.punjabrao;
+else if (checkMatch(cleanMsg, keys.shahu)) response = currentMain.shahu;
+else if (checkMatch(cleanMsg, keys.admissionDocs)) response = currentMain.admissionDocs;
+else if (checkMatch(cleanMsg, keys.admission)) response = currentMain.admission;
+else if (checkMatch(cleanMsg, keys.scholarship)) response = currentMain.scholarship;
+else if (checkMatch(cleanMsg, keys.contact)) response = currentMain.contact;
+else if (checkMatch(cleanMsg, keys.thanks)) response = currentMain.thankyou;
+else if (checkMatch(cleanMsg, keys.updates)) response = currentMain.updates;
+else if (checkMatch(cleanMsg, keys.computer)) response = currentBranch.computer;
+else if (checkMatch(cleanMsg, keys.mechanical)) response = currentBranch.mechanical;
+else if (checkMatch(cleanMsg, keys.civil)) response = currentBranch.civil;
+else if (checkMatch(cleanMsg, keys.electrical)) response = currentBranch.electrical;
+else if (checkMatch(cleanMsg, keys.etc)) response = currentBranch.etc;
+else if (checkMatch(cleanMsg, keys.syllabus)) response = currentMain.syllabus;
+else if (checkMatch(cleanMsg, keys.branch)) response = currentMain.course;
+else if (checkMatch(cleanMsg, keys.fees)) response = currentMain.fees;
+
+// 6. Final Fallback
+if (!response) {
+    const fallbacks = {
+        en: `I couldn't find a direct answer. Please check 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">Official Website</a>`,
+        mr: `मला याचे थेट उत्तर सापडले नाही. कृपया येथे पहा: 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">वेबसाइट</a>`,
+        hi: `मुझे इसका सीधा उत्तर नहीं मिला। कृपया यहाँ देखें: 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">वेबसाइट</a>`
+    };
+    return { text: fallbacks[safeLang] || fallbacks['en'], isFallback: true, context: updatedContext };
+}
+
+return { text: response, isFallback: false, context: updatedContext };
+}
+
+// Stop voice when tab becomes hidden (user switches tab / minimizes browser)
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        window.speechSynthesis.cancel();
+    }
+});
+
+// Stop voice when browser window loses focus
+window.addEventListener("blur", () => {
+    window.speechSynthesis.cancel();
+});
+
+// Stop voice when page is closing
+window.addEventListener("beforeunload", () => {
+    window.speechSynthesis.cancel();
+});
+
+</script>
+</body>
+</html>
