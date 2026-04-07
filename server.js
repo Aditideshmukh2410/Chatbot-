@@ -5,13 +5,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 
-dotenv.config();
+require("dotenv").config();
 const app = express();
 
 // ✅ Middleware
 app.use(cors());
 app.use(express.json()); 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
 // ===============================
 // MongoDB Atlas Connection
@@ -75,6 +75,9 @@ function getBotResponse(userInput) {
         return "Welcome to Shivaji Polytechnic Atpadi! I can help you with admissions, branches, and contact info. What would you like to know?";
     }
 
+    if (!process.env.MONGO_URI) {
+  console.log("MONGO_URI missing");
+    }
     // Default Fallback
     return "I'm sorry, I don't have that information yet. Please visit the Shivaji Polytechnic office or website.";
 }
