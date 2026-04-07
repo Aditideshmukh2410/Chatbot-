@@ -579,10 +579,29 @@ function generateBotResponse(msg, lang) {
 const greetingKeywords = ["hi","hello","hey","नमस्ते","नमस्कार"];
 
        const syllabusLink = "https://econtent.msbte.edu.in/curriculum_search/";
+       const education10th = [
+    "10th", "ssc", "10", "10 pass", "10th pass",
+    "१०वी", "१० वी", "ssc pass",
+    "10वीं", "दसवीं"
+];
+
+const education12th = [
+    "12th", "hsc", "12", "12 pass", "12th pass",
+    "iti", "iti pass",
+    "१२वी", "१२ वी",
+    "12वीं", "बारहवीं"
+];
     
     const keys = {
-        name: ["name", "college", "institute", "नांव", "college name"],
-        president: ["president", "tanajirao", "patil", "अध्यक्ष", "chairman"],
+       name: [
+  "college name",
+  "name of college",
+  "name of the college",
+  "institute name",
+  "what is college name"
+],
+        president: ["president", "tanajirao", "patil", "अध्यक्ष", "chairman","Founder"],
+        establishment: ["establishment", "year", "founded", "college info", "details", "स्थापना", "माहिती", "जानकारी"],
         principal: ["principal", "प्राचार्य", "kulkarni", "onkar", "head"],
         hod: ["hod", "head of department", "विभाग प्रमुख", "vibhag pramukh"],
         contact: ["address", "contact", "email", "पत्ता", "location", "phone"],
@@ -675,6 +694,13 @@ academicCoordinator: ["academic coordinator", "coordinator", "शैक्षण
     const mainResponses = {
     en: {
         collegeName: "The name of this institute is <b>Shivaji Polytechnic Atpadi</b>, located in Atpadi. Taluka Atpadi. It is a premier technical college in Sangli district. 🏫",
+        establishment: `<b>🏫 College Information:</b><br><br>
+
+                        <b>📅 Establishment Year:</b> 2009<br>
+                        <b>📍 Location:</b> Near Suresh Indane Gas Agency, Atpadi, Sangli, Maharashtra - 415301<br>
+                        <b>🏛️ Approval:</b> AICTE Approved & MSBTE Affiliated<br>
+                        <b>🎓 Course Type:</b> Diploma Engineering (After 10th)<br>
+                        <b>👥 Total Intake:</b> 240 Seats`,
         president: "The President of the college is <b>Hon. Tanajirao Patil</b>. 🎖️",
         principal: "The name of the Principal is <b>Mr. Onkar Ganesh Kulkarni</b>. 👨‍🏫",
         fees: `<b>💰 Detailed Fee Structure (Academic Year 2024-25):</b><br><br>
@@ -720,12 +746,50 @@ academicCoordinator: ["academic coordinator", "coordinator", "शैक्षण
           </a>
       </div>`,
 
-        course: "We offer Diploma in: Computer, Mechanical, Civil, Electrical, and E&TC. ⚙️",
+       course: `<b>🎓 We offer Diploma in:</b><br><br>
+
+<table style="width:100%; border-collapse: collapse; font-size: 13px;">
+  <tr style="background-color:#f2f2f2;">
+    <th style="border:1px solid #ddd; padding:8px;">Course</th>
+    <th style="border:1px solid #ddd; padding:8px;">Intake</th>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">Computer Engineering</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 Seats</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">Mechanical Engineering</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 Seats</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">Civil Engineering</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 Seats</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">Electrical Engineering</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 Seats</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">E&TC Engineering</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 Seats</td>
+  </tr>
+</table>
+
+<br>
+
+<b>🎓 Eligibility:</b><br>
+✔ 10th Pass (SSC) – For First Year Admission<br>
+✔ 12th Pass / ITI – For Direct Second Year Admission`,
         syllabus: `You can find the MSBTE curriculum for all branches here: <br><a href='${syllabusLink}' target='_blank'>🌐 MSBTE Curriculum Portal</a>`,
         hello: "Hello! How can I help you today? 😊",
         thankyou: "You're very welcome! I am happy to help. 🎓🌟",
         updates: "<b>📅 Latest Events & Updates:</b> New Admissions 2025-26 starting soon!",
-        intake: "<b>Total Student Intake:</b> 300 students per year (60 per branch). 🎓",
+        intake: "<b>Total Student Intake:</b> 240 students per year (60 per branch). 🎓",
         admission: `<b>Admission 2025-26:</b> Registration is online via <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE Maharashtra Portal</a>. 📝  
 <br><br>   
         <b>Admission Guidance:</b> <b>Mr. Pawar R.B</b> (B.E. Design) – Academic Coordinator & Vice Principal. 👨‍🏫`,
@@ -736,6 +800,13 @@ academicCoordinator: ["academic coordinator", "coordinator", "शैक्षण
     },
     mr: {
         collegeName: "या संस्थेचे नाव <b>शिवाजी पॉलिटेक्निक आटपाडी</b> आहे. 🏫",
+        establishment: `<b>🏫 महाविद्यालयाची माहिती:</b><br><br>
+
+                        <b>📅 स्थापना वर्ष:</b> 2009<br>
+                        <b>📍 स्थान:</b> सुरेश इंडेन गॅस एजन्सी जवळ, आटपाडी, सांगली - 415301<br>
+                        <b>🏛️ मान्यता:</b> AICTE मान्यताप्राप्त व MSBTE संलग्न<br>
+                        <b>🎓 कोर्स प्रकार:</b> डिप्लोमा इंजिनिअरिंग (10वी नंतर)<br>
+                        <b>👥 एकूण प्रवेश क्षमता:</b> 240 जागा`,
         president: "संस्थेचे अध्यक्ष <b>मा. तानाजीराव पाटील</b> हे आहेत. 🎖️",
         principal: "प्राचार्य <b>श्री. ओंकार गणेश कुलकर्णी</b> हे आहेत. 👨‍🏫",
         contact: `<b>📍 पत्ता:</b> शिवाजी पॉलिटेक्निक आटपाडी, सुरेश इंडेन गॅस एजन्सी जवळ, आटपाडी, सांगली ४१५३०१.<br>
@@ -751,12 +822,50 @@ academicCoordinator: ["academic coordinator", "coordinator", "शैक्षण
                   <a href="mailto:shivajipoli@rediffmail.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2504/2504914.png" width="26"></a>
                   <a href="https://www.linkedin.com/school/your_college" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3536/3536505.png" width="26"></a>
               </div>`,
-        course: "आमच्या शाखा: कॉम्प्युटर, मेकॅनिकल, सिव्हिल, इलेक्ट्रिकल, ई-अँड-टीसी. ⚙️",
+       course: `<b>🎓 आमच्या शाखा:</b><br><br>
+
+<table style="width:100%; border-collapse: collapse; font-size: 13px;">
+  <tr style="background-color:#f2f2f2;">
+    <th style="border:1px solid #ddd; padding:8px;">शाखा</th>
+    <th style="border:1px solid #ddd; padding:8px;">प्रवेश क्षमता</th>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">कॉम्प्युटर इंजिनिअरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 जागा</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">मेकॅनिकल इंजिनिअरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 जागा</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">सिव्हिल इंजिनिअरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 जागा</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">इलेक्ट्रिकल इंजिनिअरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 जागा</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">ई&टीसी इंजिनिअरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 जागा</td>
+  </tr>
+</table>
+
+<br>
+
+<b>🎓 पात्रता:</b><br>
+✔ 10वी पास – प्रथम वर्ष प्रवेशासाठी<br>
+✔ 12वी / ITI – थेट द्वितीय वर्षासाठी`,
         syllabus: `येथे सर्व शाखांचा अभ्यासक्रम मिळेल: <br><a href='${syllabusLink}' target='_blank'>🌐 अभ्यासक्रम पोर्टल</a>`,
         hello: "नमस्कार! मी तुमची काय मदत करू शकते? 😊",
         thankyou: "तुमचे स्वागत आहे! मला आनंद झाला. 🚩🎓",
         updates: "<b>📅 नवीन अपडेट्स:</b> २०२५-२६ प्रवेश लवकरच सुरू. 🏆",
-        intake: "<b>प्रवेश क्षमता:</b> ३०० जागा. 🎓",
+        intake: "<b>प्रवेश क्षमता:</b> 240 जागा. 🎓",
         admission: `<b>प्रवेश २०२५-२६:</b> ऑनलाईन नोंदणी <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE महाराष्ट्र पोर्टल</a> वर करा. 📝<br><br>
 <b>प्रवेश मार्गदर्शन:</b> <b>श्री. पवार आर. बी.</b> (B.E. Design) – शैक्षणिक समन्वयक व उपप्राचार्य. 👨‍🏫`,
         admissionDocs: "<b>कागदपत्रे:</b> १०वी मार्कशीट, एल.सी, जातीचा दाखला, आधार कार्ड.",
@@ -766,16 +875,61 @@ academicCoordinator: ["academic coordinator", "coordinator", "शैक्षण
     },
   hi: {
     collegeName: "इस संस्थान का नाम <b>शिवाजी पॉलिटेक्निक आटपाडी</b> है, जो सांगली जिले में स्थित है। 🏫",
+    establishment: `<b>🏫 कॉलेज की जानकारी:</b><br><br>
+
+                    <b>📅 स्थापना वर्ष:</b> 2009<br>
+                    <b>📍 स्थान:</b> सुरेश इंडेन गैस एजेंसी के पास, आटपाडी, सांगली - 415301<br>
+                    <b>🏛️ मान्यता:</b> AICTE द्वारा अनुमोदित एवं MSBTE से संबद्ध<br>
+                    <b>🎓 कोर्स प्रकार:</b> डिप्लोमा इंजीनियरिंग (10वीं के बाद)<br>
+                    <b>👥 कुल सीटें:</b> 240`,
     president: "कॉलेज के अध्यक्ष <b>माननीय तानाजीराव पाटिल</b> हैं। 🎖️",
     principal: "प्राचार्य का नाम <b>श्री ओंकार गणेश कुलकर्णी</b> है। 👨‍🏫",
     fees: `<b>💰 विस्तृत शुल्क विवरण (2024-25):</b><br>प्रथम वर्ष: ₹67,545<br>द्वितीय वर्ष: ₹47,230`,
     contact: `<b>📍 पता:</b> शिवाजी पॉलिटेक्निक आटपाडी, सांगली 415301.<br><b>📞 फोन:</b> 02343-221177`,
-    course: "हम कंप्यूटर, मैकेनिकल, सिविल, इलेक्ट्रिकल और ई-एंड-टीसी में डिप्लोमा प्रदान करते हैं। ⚙️",
+    course: `<b>🎓 हम निम्न शाखाओं में डिप्लोमा प्रदान करते हैं:</b><br><br>
+
+<table style="width:100%; border-collapse: collapse; font-size: 13px;">
+  <tr style="background-color:#f2f2f2;">
+    <th style="border:1px solid #ddd; padding:8px;">शाखा</th>
+    <th style="border:1px solid #ddd; padding:8px;">प्रवेश क्षमता</th>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">कंप्यूटर इंजीनियरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 सीटें</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">मैकेनिकल इंजीनियरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 सीटें</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">सिविल इंजीनियरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 सीटें</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">इलेक्ट्रिकल इंजीनियरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 सीटें</td>
+  </tr>
+
+  <tr>
+    <td style="border:1px solid #ddd; padding:8px;">ई&टीसी इंजीनियरिंग</td>
+    <td style="border:1px solid #ddd; padding:8px;">60 सीटें</td>
+  </tr>
+</table>
+
+<br>
+
+<b>🎓 पात्रता:</b><br>
+✔ 10वीं पास – प्रथम वर्ष के लिए<br>
+✔ 12वीं / ITI – सीधे दूसरे वर्ष के लिए`,
     syllabus: `आप सभी शाखाओं का सिलेबस यहाँ पा सकते हैं: <br><a href='${syllabusLink}' target='_blank'>🌐 एमएसबीटीई पोर्टल</a>`,
     hello: "नमस्ते! आज मैं आपकी क्या सहायता कर सकती हूँ? 😊",
     thankyou: "आपका स्वागत है! मुझे मदद करके खुशी हुई। 🎓",
     updates: "<b>📅 नवीनतम अपडेट:</b> नए प्रवेश 2025-26 जल्द ही शुरू हो रहे हैं!",
-    intake: "<b>कुल प्रवेश क्षमता:</b> प्रति वर्ष 300 छात्र। 🎓",
+    intake: "<b>कुल प्रवेश क्षमता:</b> प्रति वर्ष 240 छात्र। 🎓",
     admission: `<b>प्रवेश 2025-26:</b> पंजीकरण ऑनलाइन <a href="https://www.dtemaharashtra.gov.in/" target="_blank">DTE महाराष्ट्र पोर्टल</a> पर करें। 📝<br><br>
     <b>प्रवेश मार्गदर्शन:</b> <b>श्री पवार आर. बी.</b> (B.E. Design) – अकादमिक समन्वयक एवं उप-प्राचार्य। 👨‍🏫`,
     scholarship: "हम <b>राजर्षी शाहू महाराज (EBC)</b>, <b>डॉ. पंजाबराव देशमुख छात्रावास भत्ता</b> और SC/ST/OBC छात्रवृत्ति योजनाओं का समर्थन करते हैं।"
@@ -803,6 +957,8 @@ const safeLang = lang || 'en'; // Ensure lang is never undefined
 let currentMain = mainResponses[safeLang] || mainResponses['en'];
 let currentBranch = branchDetails[safeLang] || branchDetails['en'];
 let currentHod = hodData[safeLang] || hodData['en'];
+let userProfile = {};
+
 
 // Utility to normalize greetings
 function normalizeGreeting(msg) {
@@ -844,6 +1000,7 @@ if (greetingMap[safeLang]?.includes(normalizedMsg)) {
     };
 }
 
+
 // 4. Update Branch Context
 let updatedContext = lastBranchContext;
 if (checkMatch(cleanMsg, keys.computer)) updatedContext = "computer";
@@ -871,12 +1028,59 @@ else if (checkMatch(cleanMsg, keys.hod)) {
 } 
 else if (checkMatch(cleanMsg, keys.principal)) response = currentMain.principal;
 else if (checkMatch(cleanMsg, keys.president)) response = currentMain.president;
+else if (checkMatch(cleanMsg, keys.establishment)) response = currentMain.establishment;
 else if (checkMatch(cleanMsg, keys.name)) response = currentMain.collegeName;
 else if (checkMatch(cleanMsg, keys.syllabus) && updatedContext) response = currentBranch[updatedContext];
 else if (checkMatch(cleanMsg, keys.intake)) response = currentMain.intake;
 else if (checkMatch(cleanMsg, keys.punjabrao)) response = currentMain.punjabrao;
 else if (checkMatch(cleanMsg, keys.shahu)) response = currentMain.shahu;
 else if (checkMatch(cleanMsg, keys.admissionDocs)) response = currentMain.admissionDocs;
+// ✅ AFTER admission check
+else if (checkMatch(cleanMsg, keys.admission)) response = currentMain.admission;
+
+// 👇 ADD YOUR NEW CODE HERE 👇
+
+// 🎓 ELIGIBILITY QUESTION
+else if (checkMatch(cleanMsg, ["eligibility", "qualification", "criteria", "पात्रता", "योग्यता"])) {
+
+    if(safeLang === "mr"){
+        response = "🎓 तुम्ही 10वी पास आहात का 12वी पास?";
+    }
+    else if(safeLang === "hi"){
+        response = "🎓 क्या आप 10वीं पास हैं या 12वीं?";
+    }
+    else{
+        response = "🎓 Are you 10th pass or 12th pass?";
+    }
+}
+
+// 🎓 10th Logic
+else if (checkMatch(cleanMsg, education10th)) {
+
+    if(safeLang === "mr"){
+        response = "🎓 तुम्ही प्रथम वर्ष डिप्लोमा साठी पात्र आहात.\n✔ DTE पोर्टलवर अर्ज करू शकता.";
+    }
+    else if(safeLang === "hi"){
+        response = "🎓 आप प्रथम वर्ष डिप्लोमा के लिए पात्र हैं।\n✔ DTE पोर्टल पर आवेदन कर सकते हैं।";
+    }
+    else{
+        response = "🎓 You are eligible for First Year Diploma.\n✔ You can apply through DTE portal.";
+    }
+}
+
+// 🎓 12th / ITI Logic
+else if (checkMatch(cleanMsg, education12th)) {
+
+    if(safeLang === "mr"){
+        response = "🎓 तुम्ही थेट द्वितीय वर्ष (Direct Second Year) साठी पात्र आहात.\n✔ DTE पोर्टलवर अर्ज करा.";
+    }
+    else if(safeLang === "hi"){
+        response = "🎓 आप सीधे दूसरे वर्ष (Direct Second Year) के लिए पात्र हैं।\n✔ DTE पोर्टल पर आवेदन करें।";
+    }
+    else{
+        response = "🎓 You are eligible for Direct Second Year.\n✔ Apply via DTE portal.";
+    }
+}
 else if (checkMatch(cleanMsg, keys.admission)) response = currentMain.admission;
 else if (checkMatch(cleanMsg, keys.scholarship)) response = currentMain.scholarship;
 else if (checkMatch(cleanMsg, keys.contact)) response = currentMain.contact;
@@ -890,13 +1094,12 @@ else if (checkMatch(cleanMsg, keys.etc)) response = currentBranch.etc;
 else if (checkMatch(cleanMsg, keys.syllabus)) response = currentMain.syllabus;
 else if (checkMatch(cleanMsg, keys.branch)) response = currentMain.course;
 else if (checkMatch(cleanMsg, keys.fees)) response = currentMain.fees;
-
 // 6. Final Fallback
 if (!response) {
     const fallbacks = {
-        en: `I couldn't find a direct answer. Please check 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">Official Website</a>`,
-        mr: `मला याचे थेट उत्तर सापडले नाही. कृपया येथे पहा: 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">वेबसाइट</a>`,
-        hi: `मुझे इसका सीधा उत्तर नहीं मिला। कृपया यहाँ देखें: 🌐 <a href="https://shivajipolyatpadi.org/" target="_blank">वेबसाइट</a>`
+        en: `I couldn't find a direct answer. Please check 🌐 <a href="https://shivajipolyatpadi.in/" target="_blank">Official Website</a>`,
+        mr: `मला याचे थेट उत्तर सापडले नाही. कृपया येथे पहा: 🌐 <a href="https://shivajipolyatpadi.in/" target="_blank">वेबसाइट</a>`,
+        hi: `मुझे इसका सीधा उत्तर नहीं मिला। कृपया यहाँ देखें: 🌐 <a href="https://shivajipolyatpadi.in/" target="_blank">वेबसाइट</a>`
     };
     return { text: fallbacks[safeLang] || fallbacks['en'], isFallback: true, context: updatedContext };
 }
